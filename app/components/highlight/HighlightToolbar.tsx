@@ -27,7 +27,8 @@ export function HighlightToolbar({ position, onHighlight }: HighlightToolbarProp
           key={color}
           variant="ghost"
           size="icon"
-          className={`p-1 bg-[${color}] hover:bg-[${color}]/80 transition-colors duration-200`}
+          style={{ backgroundColor: color }}
+          className="p-1 hover:opacity-80 transition-colors duration-200"
           onClick={() => onHighlight(color)}
         >
           <Highlighter className={`h-4 w-4 text-${textColor}-600`} />
