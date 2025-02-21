@@ -1,6 +1,6 @@
 # Markdown Highlighter
 
-A web-based Markdown editor with highlighting and annotation capabilities, built with Remix and React.
+A web-based Markdown preview with highlighting and annotation capabilities, built with Remix and React.
 
 ## Features
 
