@@ -30,8 +30,11 @@ export function HighlightCard({ highlight, onRemove, onCommentChange }: Highligh
       </CardHeader>
       <CardContent>
         <div 
-          className="italic text-xs"
-          style={{ backgroundColor: highlight.color }}
+          className="italic text-xs pl-4 border-l-4"
+          style={{ 
+            borderLeftColor: highlight.color,
+            backgroundColor: 'white'
+          }}
         >
           {highlight.text}
         </div>
