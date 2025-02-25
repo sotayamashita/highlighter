@@ -67,6 +67,11 @@ export function useHighlight() {
   };
 
   const handleAddComment = (id: string, comment: string) => {
+    const markElement = document.querySelector(`mark[data-highlight-id="${id}"]`);
+    if (markElement) {
+      markElement.setAttribute('data-comment', comment);
+    }
+
     setHighlights(prev => prev.map(h => 
       h.id === id ? { ...h, comment } : h
     ));
