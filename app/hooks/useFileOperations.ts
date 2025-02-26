@@ -82,41 +82,46 @@ export function useFileOperations(
   };
 
   // ハイライトを削除する関数
-  const removeHighlightFromContent = (highlightId: string, highlightText?: string) => {
+  const removeHighlightFromContent = (
+    highlightId: string,
+    highlightText?: string,
+  ) => {
     // 正規表現でマークタグを検索して削除
     const markRegexWithId = new RegExp(
       `<mark[^>]*data-highlight-id="${highlightId}"[^>]*>(.*?)<\/mark>`,
-      "g"
+      "g",
     );
-    
+
     // IDで見つかった場合はそれを置換
     if (content.match(markRegexWithId)) {
       setContent((prevContent) => prevContent.replace(markRegexWithId, "$1"));
       return;
     }
-    
+
     // IDで見つからない場合は、ハイライトされたテキストを取得
     const markElement = document.querySelector(
-      `mark[data-highlight-id="${highlightId}"]`
+      `mark[data-highlight-id="${highlightId}"]`,
     );
-    
+
     if (markElement) {
       const text = markElement.textContent || "";
       if (text) {
         // テキスト内容でマークタグを検索（エスケープして正規表現で使用）
-        const escapedText = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const escapedText = text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
         const markRegexWithText = new RegExp(
           `<mark[^>]*>(${escapedText})<\/mark>`,
-          "g"
+          "g",
         );
-        setContent((prevContent) => prevContent.replace(markRegexWithText, "$1"));
+        setContent((prevContent) =>
+          prevContent.replace(markRegexWithText, "$1"),
+        );
       }
     } else if (highlightText) {
       // DOMに要素がない場合でも、テキストが提供されていれば使用
-      const escapedText = highlightText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const escapedText = highlightText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       const markRegexWithText = new RegExp(
         `<mark[^>]*>(${escapedText})<\/mark>`,
-        "g"
+        "g",
       );
       setContent((prevContent) => prevContent.replace(markRegexWithText, "$1"));
     }

@@ -22,7 +22,7 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const marked = new Marked();
-  
+
   const {
     highlights,
     showToolbar,
@@ -33,16 +33,20 @@ export default function Index() {
     handleAddComment,
     setHighlights,
   } = useHighlight();
-  
-  const { content, handleFileUpload, handleDownload, removeHighlightFromContent } =
-    useFileOperations(setHighlights);
-    
+
+  const {
+    content,
+    handleFileUpload,
+    handleDownload,
+    removeHighlightFromContent,
+  } = useFileOperations(setHighlights);
+
   const originalHandleRemoveHighlight = handleRemoveHighlight;
   const enhancedHandleRemoveHighlight = (id: string) => {
     // ハイライトのテキスト内容を取得
-    const highlight = highlights.find(h => h.id === id);
+    const highlight = highlights.find((h) => h.id === id);
     const highlightText = highlight?.text || "";
-    
+
     originalHandleRemoveHighlight(id);
     if (removeHighlightFromContent) {
       removeHighlightFromContent(id, highlightText);
