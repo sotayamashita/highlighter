@@ -34,6 +34,7 @@ npm start
 ```
 
 Make sure to deploy the output of `npm run build`:
+
 - `build/server`
 - `build/client`
 
@@ -48,24 +49,30 @@ Make sure to deploy the output of `npm run build`:
 ## Implementation Details
 
 ### Components
+
 - `HighlightCard`: Displays highlighted text with comments
 - `HighlightToolbar`: Floating toolbar for color selection
 
 ### Custom Hooks
+
 - `useHighlight`: Manages highlight operations and state
 - `useFileOperations`: Handles file import/export with highlight preservation
 
 ### Features
+
 1. **Text Selection**:
+
    - Select text to trigger the highlight toolbar
    - Choose from 4 highlight colors (yellow, pink, blue, green)
 
 2. **Highlighting**:
+
    - Highlights are stored with unique IDs
    - Uses HTML `mark` elements for highlighting
    - Preserves original text structure
 
 3. **Annotations**:
+
    - Add comments to any highlight
    - Comments are stored alongside highlight data
 

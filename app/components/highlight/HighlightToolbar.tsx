@@ -7,9 +7,12 @@ interface HighlightToolbarProps {
   onHighlight: (color: string) => void;
 }
 
-export function HighlightToolbar({ position, onHighlight }: HighlightToolbarProps) {
+export function HighlightToolbar({
+  position,
+  onHighlight,
+}: HighlightToolbarProps) {
   return (
-    <div 
+    <div
       className="fixed z-50 bg-white shadow-lg rounded-lg p-2 transform -translate-x-1/2 -translate-y-full flex gap-1"
       style={{
         top: `${position.top}px`,
@@ -30,4 +33,4 @@ export function HighlightToolbar({ position, onHighlight }: HighlightToolbarProp
       ))}
     </div>
   );
-} 
+}

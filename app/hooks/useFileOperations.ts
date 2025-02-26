@@ -3,12 +3,14 @@ import type { Highlight } from "~/types/highlight";
 import { highlightColors, defaultHighlightColor } from "~/lib/colors";
 import { defaultContent } from "~/lib/defaultContent";
 
-export function useFileOperations(setHighlights: (highlights: Highlight[]) => void) {
+export function useFileOperations(
+  setHighlights: (highlights: Highlight[]) => void,
+) {
   const [content, setContent] = useState(defaultContent);
 
   // コンポーネントのマウント時に初期コンテンツからハイライトを抽出
   useEffect(() => {
-    if (typeof document !== 'undefined') {
+    if (typeof document !== "undefined") {
       // サーバーサイドレンダリング時にはDOMParserが利用できないため、
       // クライアントサイドでのみ実行
       const { highlights } = extractHighlightsFromMarkTags(defaultContent);
@@ -19,18 +21,18 @@ export function useFileOperations(setHighlights: (highlights: Highlight[]) => vo
   // markタグからハイライト情報を抽出する関数
   const extractHighlightsFromMarkTags = (text: string) => {
     const parser = new DOMParser();
-    const doc = parser.parseFromString(`<div>${text}</div>`, 'text/html');
-    const markElements = doc.getElementsByTagName('mark');
+    const doc = parser.parseFromString(`<div>${text}</div>`, "text/html");
+    const markElements = doc.getElementsByTagName("mark");
     const highlights: Highlight[] = [];
 
-    Array.from(markElements).forEach(mark => {
-      const text = mark.textContent || '';
+    Array.from(markElements).forEach((mark) => {
+      const text = mark.textContent || "";
       const color = mark.style.backgroundColor || defaultHighlightColor; // デフォルトは共通定義の黄色
       const highlightId = crypto.randomUUID();
-      
+
       // コメントがあれば取得
-      const comment = mark.getAttribute('data-comment') || '';
-      
+      const comment = mark.getAttribute("data-comment") || "";
+
       const highlight: Highlight = {
         id: highlightId,
         text,
@@ -41,17 +43,17 @@ export function useFileOperations(setHighlights: (highlights: Highlight[]) => vo
         startOffset: 0,
         endOffset: text.length,
       };
-      
+
       // markタグにハイライトIDを設定
-      mark.setAttribute('data-highlight-id', highlightId);
-      
+      mark.setAttribute("data-highlight-id", highlightId);
+
       highlights.push(highlight);
     });
 
     // markタグを含むHTMLを返す
     return {
       processedContent: doc.body.innerHTML,
-      highlights
+      highlights,
     };
   };
 
@@ -62,11 +64,12 @@ export function useFileOperations(setHighlights: (highlights: Highlight[]) => vo
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target?.result as string;
-      
+
       // markタグがあるか確認
-      if (text.includes('<mark')) {
+      if (text.includes("<mark")) {
         // markタグからハイライト情報を抽出
-        const { processedContent, highlights } = extractHighlightsFromMarkTags(text);
+        const { processedContent, highlights } =
+          extractHighlightsFromMarkTags(text);
         setContent(processedContent);
         setHighlights(highlights);
       } else {
@@ -79,26 +82,29 @@ export function useFileOperations(setHighlights: (highlights: Highlight[]) => vo
   };
 
   const handleDownload = () => {
-    const contentDiv = document.querySelector('.prose');
+    const contentDiv = document.querySelector(".prose");
     if (!contentDiv) return;
 
     let mdContent = content;
-    const marks = Array.from(contentDiv.getElementsByTagName('mark'));
-    
-    marks.forEach(mark => {
+    const marks = Array.from(contentDiv.getElementsByTagName("mark"));
+
+    marks.forEach((mark) => {
       const color = mark.style.backgroundColor;
       const text = mark.textContent;
-      const comment = mark.getAttribute('data-comment') || '';
-      
+      const comment = mark.getAttribute("data-comment") || "";
+
       // コメントがあれば追加
-      const commentAttr = comment ? ` data-comment="${comment}"` : '';
+      const commentAttr = comment ? ` data-comment="${comment}"` : "";
       const highlightSyntax = `<mark style="background-color: ${color}"${commentAttr}>${text}</mark>`;
-      
+
       // テキストを置換する際に、同じテキストが複数ある場合に問題が発生する可能性があるため、
       // 一意のIDを使用して特定のmarkタグを識別する
-      const highlightId = mark.getAttribute('data-highlight-id');
+      const highlightId = mark.getAttribute("data-highlight-id");
       if (highlightId) {
-        const markRegex = new RegExp(`<mark[^>]*data-highlight-id="${highlightId}"[^>]*>.*?<\/mark>`, 'g');
+        const markRegex = new RegExp(
+          `<mark[^>]*data-highlight-id="${highlightId}"[^>]*>.*?<\/mark>`,
+          "g",
+        );
         mdContent = mdContent.replace(markRegex, highlightSyntax);
       } else {
         // 後方互換性のために、IDがない場合はテキストで置換
@@ -106,11 +112,11 @@ export function useFileOperations(setHighlights: (highlights: Highlight[]) => vo
       }
     });
 
-    const blob = new Blob([mdContent], { type: 'text/markdown' });
+    const blob = new Blob([mdContent], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'highlighted-content.md';
+    a.download = "highlighted-content.md";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -122,4 +128,4 @@ export function useFileOperations(setHighlights: (highlights: Highlight[]) => vo
     handleFileUpload,
     handleDownload,
   };
-} 
+}

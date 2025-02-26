@@ -15,10 +15,10 @@ export function useHighlight() {
 
     const range = selection.getRangeAt(0);
     const rect = range.getBoundingClientRect();
-    
+
     setToolbarPosition({
       top: rect.top - 10,
-      left: rect.left + (rect.width / 2),
+      left: rect.left + rect.width / 2,
     });
     setShowToolbar(true);
   };
@@ -28,11 +28,11 @@ export function useHighlight() {
     if (!selection) return;
 
     const range = selection.getRangeAt(0);
-    const mark = document.createElement('mark');
+    const mark = document.createElement("mark");
     mark.style.backgroundColor = color;
     const highlightId = crypto.randomUUID();
-    mark.setAttribute('data-highlight-id', highlightId);
-    
+    mark.setAttribute("data-highlight-id", highlightId);
+
     try {
       range.surroundContents(mark);
       const newHighlight: Highlight = {
@@ -43,9 +43,9 @@ export function useHighlight() {
         endOffset: range.endOffset,
         color: color,
       };
-      setHighlights(prev => [...prev, newHighlight]);
+      setHighlights((prev) => [...prev, newHighlight]);
     } catch (error) {
-      console.error('Failed to highlight text:', error);
+      console.error("Failed to highlight text:", error);
     }
 
     selection.removeAllRanges();
@@ -53,28 +53,32 @@ export function useHighlight() {
   };
 
   const handleRemoveHighlight = (id: string) => {
-    if (!confirm('このハイライトを削除してもよろしいですか？')) {
+    if (!confirm("このハイライトを削除してもよろしいですか？")) {
       return;
     }
 
-    const markElement = document.querySelector(`mark[data-highlight-id="${id}"]`);
+    const markElement = document.querySelector(
+      `mark[data-highlight-id="${id}"]`,
+    );
     if (markElement) {
-      const textNode = document.createTextNode(markElement.textContent || '');
+      const textNode = document.createTextNode(markElement.textContent || "");
       markElement.parentNode?.replaceChild(textNode, markElement);
     }
 
-    setHighlights(prev => prev.filter(h => h.id !== id));
+    setHighlights((prev) => prev.filter((h) => h.id !== id));
   };
 
   const handleAddComment = (id: string, comment: string) => {
-    const markElement = document.querySelector(`mark[data-highlight-id="${id}"]`);
+    const markElement = document.querySelector(
+      `mark[data-highlight-id="${id}"]`,
+    );
     if (markElement) {
-      markElement.setAttribute('data-comment', comment);
+      markElement.setAttribute("data-comment", comment);
     }
 
-    setHighlights(prev => prev.map(h => 
-      h.id === id ? { ...h, comment } : h
-    ));
+    setHighlights((prev) =>
+      prev.map((h) => (h.id === id ? { ...h, comment } : h)),
+    );
   };
 
   return {
@@ -87,4 +91,4 @@ export function useHighlight() {
     handleAddComment,
     setHighlights,
   };
-} 
+}

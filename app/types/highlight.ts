@@ -6,4 +6,4 @@ export interface Highlight {
   endOffset: number;
   comment?: string;
   color: string;
-} 
+}

@@ -1,7 +1,11 @@
 import { Marked } from "marked";
 import type { MetaFunction } from "@remix-run/node";
-import { FileDown } from 'lucide-react';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "~/components/ui/resizable"
+import { FileDown } from "lucide-react";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "~/components/ui/resizable";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { HighlightCard } from "~/components/highlight/HighlightCard";
@@ -29,27 +33,32 @@ export default function Index() {
     setHighlights,
   } = useHighlight();
 
-  const {
-    content,
-    handleFileUpload,
-    handleDownload,
-  } = useFileOperations(setHighlights);
+  const { content, handleFileUpload, handleDownload } =
+    useFileOperations(setHighlights);
 
   return (
-    <ResizablePanelGroup direction="horizontal" className="h-screen overflow-hidden">
+    <ResizablePanelGroup
+      direction="horizontal"
+      className="h-screen overflow-hidden"
+    >
       <ResizablePanel defaultSize={80} minSize={50}>
         <div className="overflow-y-auto h-full">
           <div className="sticky top-0 bg-white px-4 py-2 border-b z-10 flex items-center justify-between">
             <div className="flex w-full max-w-sm items-center gap-1.5">
-              <Input type="file" accept=".md" onChange={handleFileUpload} className="cursor-pointer"/>
+              <Input
+                type="file"
+                accept=".md"
+                onChange={handleFileUpload}
+                className="cursor-pointer"
+              />
             </div>
             <Button variant="ghost" size="icon" onClick={handleDownload}>
               <FileDown className="h-4 w-4" />
             </Button>
           </div>
 
-          <div 
-            className="prose mx-auto py-12 px-6" 
+          <div
+            className="prose mx-auto py-12 px-6"
             dangerouslySetInnerHTML={{ __html: marked.parse(content) }}
             onMouseUp={handleSelection}
           />

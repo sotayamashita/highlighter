@@ -10,13 +10,17 @@ interface HighlightCardProps {
   onCommentChange: (id: string, comment: string) => void;
 }
 
-export function HighlightCard({ highlight, onRemove, onCommentChange }: HighlightCardProps) {
+export function HighlightCard({
+  highlight,
+  onRemove,
+  onCommentChange,
+}: HighlightCardProps) {
   return (
     <Card className="relative">
       <CardHeader className="pt-6 px-6 py-2">
         <div className="flex justify-between items-center">
           <div className="text-xs text-muted-foreground">
-            {highlight.createdAt.toLocaleString()}  
+            {highlight.createdAt.toLocaleString()}
           </div>
           <Button
             variant="ghost"
@@ -29,11 +33,11 @@ export function HighlightCard({ highlight, onRemove, onCommentChange }: Highligh
         </div>
       </CardHeader>
       <CardContent>
-        <div 
+        <div
           className="italic text-xs pl-4 border-l-4"
-          style={{ 
+          style={{
             borderLeftColor: highlight.color,
-            backgroundColor: 'white'
+            backgroundColor: "white",
           }}
         >
           {highlight.text}
@@ -42,7 +46,7 @@ export function HighlightCard({ highlight, onRemove, onCommentChange }: Highligh
           <Textarea
             id={`comment-${highlight.id}`}
             placeholder="コメントを追加..."
-            value={highlight.comment || ''}
+            value={highlight.comment || ""}
             onChange={(e) => onCommentChange(highlight.id, e.target.value)}
             className="min-h-[80px] resize-none"
           />
@@ -50,4 +54,4 @@ export function HighlightCard({ highlight, onRemove, onCommentChange }: Highligh
       </CardContent>
     </Card>
   );
-} 
+}
