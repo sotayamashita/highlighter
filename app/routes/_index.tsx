@@ -22,6 +22,7 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const marked = new Marked();
+  
   const {
     highlights,
     showToolbar,
@@ -32,9 +33,21 @@ export default function Index() {
     handleAddComment,
     setHighlights,
   } = useHighlight();
-
-  const { content, handleFileUpload, handleDownload } =
+  
+  const { content, handleFileUpload, handleDownload, removeHighlightFromContent } =
     useFileOperations(setHighlights);
+    
+  const originalHandleRemoveHighlight = handleRemoveHighlight;
+  const enhancedHandleRemoveHighlight = (id: string) => {
+    // ハイライトのテキスト内容を取得
+    const highlight = highlights.find(h => h.id === id);
+    const highlightText = highlight?.text || "";
+    
+    originalHandleRemoveHighlight(id);
+    if (removeHighlightFromContent) {
+      removeHighlightFromContent(id, highlightText);
+    }
+  };
 
   return (
     <ResizablePanelGroup
@@ -77,7 +90,7 @@ export default function Index() {
               <HighlightCard
                 key={highlight.id}
                 highlight={highlight}
-                onRemove={handleRemoveHighlight}
+                onRemove={enhancedHandleRemoveHighlight}
                 onCommentChange={handleAddComment}
               />
             ))}

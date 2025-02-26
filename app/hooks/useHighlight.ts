@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Highlight } from "~/types/highlight";
 
-export function useHighlight() {
+export function useHighlight(removeHighlightFromContent?: (id: string, text?: string) => void) {
   const [highlights, setHighlights] = useState<Highlight[]>([]);
   const [showToolbar, setShowToolbar] = useState(false);
   const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
@@ -57,12 +57,19 @@ export function useHighlight() {
       return;
     }
 
+    const highlight = highlights.find(h => h.id === id);
+    const highlightText = highlight?.text || "";
+
     const markElement = document.querySelector(
       `mark[data-highlight-id="${id}"]`,
     );
     if (markElement) {
       const textNode = document.createTextNode(markElement.textContent || "");
       markElement.parentNode?.replaceChild(textNode, markElement);
+    }
+
+    if (removeHighlightFromContent) {
+      removeHighlightFromContent(id, highlightText);
     }
 
     setHighlights((prev) => prev.filter((h) => h.id !== id));
